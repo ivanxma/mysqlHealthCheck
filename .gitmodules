@@ -1,0 +1,3 @@
+[submodule "mysqlshell-plugins"]
+	path = mysqlshell-plugins
+	url = https://github.com/ivanxma/mysqlshell-plugins
