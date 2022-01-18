@@ -1,6 +1,7 @@
 from mysqlsh.plugin_manager import plugin, plugin_function
 from mysql_healthcheck.comm import __runAndReturn, __isHeatWaveOnline, __isHeatWavePlugin
 from mysql_healthcheck.security import __isKeyringOn, __listEncryptedTables, __isAuditOn, __isFirewallOn
+from mysql_healthcheck.threadpool import __isThreadPoolOn, __listThreadPoolVariables
 from mysql_healthcheck import comm
 from support.fetch import get_fetch_info
 from check.schema import get_innodb_with_nopk
@@ -112,5 +113,13 @@ def run( session=None):
     else:
         print("TDE keyring is not installed")
 
+    print("Thread Pool")
+    if __isThreadPoolOn(True, session):
+        print("Thread Pool is installed")
+        __listThreadPoolVariables(session)
+    else:
+        print("Thread Pool is notinstalled")
+
+    __listThreadPoolVariables
     return
 
