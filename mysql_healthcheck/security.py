@@ -24,7 +24,7 @@ def __isKeyringOn(myprint=True, session=None) :
     
     import mysqlsh
     shell = mysqlsh.globals.shell
-    if myprint :
+    if myprint:
         rows = shell.dump_rows(result)
         if rows > 0:
             return True

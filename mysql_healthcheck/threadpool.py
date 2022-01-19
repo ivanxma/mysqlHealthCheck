@@ -41,34 +41,3 @@ def __isThreadPoolOn(myprint=True, session=None):
             return False
 
 
-def __listThreadPoolVariables( session=None):
-
-    import mysqlsh
-    shell = mysqlsh.globals.shell
-
-    if session is None:
-        session = shell.get_session()
-        if session is None:
-            print("No session specified. Either pass a session object to this "
-                  "function or connect the shell to a database")
-            return
-
-    result = session.run_sql("""
-        select * from performance_schema.variables_info where variable_name like 'thread_pool%';
-    """)
-
-    if (result.get_warnings_count() > 0):
-        # Bail out and print the warnings
-        print("Warnings occurred - bailing out:")
-        print(result.get_warnings())
-        return False
-    
-    import mysqlsh
-    shell = mysqlsh.globals.shell
-    rows = shell.dump_rows(result)
-    if rows > 0 :
-        return True
-    else:
-        return False
-
-

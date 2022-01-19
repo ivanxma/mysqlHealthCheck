@@ -70,3 +70,39 @@ def __isHeatWavePlugin(session=None):
 
     return False
 
+def __listVariables(variablePattern=None, session=None):
+
+    import mysqlsh
+    shell = mysqlsh.globals.shell
+
+    if session is None:
+        session = shell.get_session()
+        if session is None:
+            print("No session specified. Either pass a session object to this "
+                  "function or connect the shell to a database")
+            return
+
+    if variablePattern is None:
+        variablePattern="%"
+    else:
+        variablePattern="%" + variablePattern + "%"
+
+    result = session.run_sql("""
+        select * from performance_schema.variables_info where variable_name like '%s';
+    """ % variablePattern)
+
+    if (result.get_warnings_count() > 0):
+        # Bail out and print the warnings
+        print("Warnings occurred - bailing out:")
+        print(result.get_warnings())
+        return False
+    
+    import mysqlsh
+    shell = mysqlsh.globals.shell
+    rows = shell.dump_rows(result)
+    if rows > 0 :
+        return True
+    else:
+        return False
+
+

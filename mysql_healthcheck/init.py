@@ -1,7 +1,7 @@
 from mysqlsh.plugin_manager import plugin, plugin_function
-from mysql_healthcheck.comm import __runAndReturn, __isHeatWaveOnline, __isHeatWavePlugin
+from mysql_healthcheck.comm import __runAndReturn, __isHeatWaveOnline, __isHeatWavePlugin, __listVariables
 from mysql_healthcheck.security import __isKeyringOn, __listEncryptedTables, __isAuditOn, __isFirewallOn
-from mysql_healthcheck.threadpool import __isThreadPoolOn, __listThreadPoolVariables
+from mysql_healthcheck.threadpool import __isThreadPoolOn
 from mysql_healthcheck import comm
 from support.fetch import get_fetch_info
 from check.schema import get_innodb_with_nopk
@@ -22,11 +22,10 @@ class mysql_healthcheck:
 
 def __getUserDatabaseTableSize(session):
 
-    stmt = """ SELECT table_schema "DB Name", table_name, ROUND(SUM(data_length + index_length) / 1024 / 1024, 1) "DB Size in MB" 
+    stmt = """ SELECT table_schema "DB Name", ROUND(SUM(data_length + index_length) / 1024 / 1024, 1) "DB Size in MB" 
     FROM information_schema.tables  
     where table_type =  'BASE TABLE' 
-    and table_schema not in ('performance_schema', 'mysql', 'mysql_innodb_cluster_metadata', 'sys')  
-    GROUP BY table_schema, table_name;
+    GROUP BY table_schema;
     """
 
     result = __runAndReturn(session, stmt)
@@ -94,14 +93,16 @@ def run( session=None):
 
     print("Audit Log")
     if __isAuditOn(True, session):
-         print("Audit Plugin is installed")    
+         print("Audit Plugin is installed") 
+         __listVariables('audit',session)   
     else:   
         print("Audit Plugin is not installed")
 
 
     print("Enterprise Firewall")
     if __isFirewallOn(True, session):
-         print("Enterprise Firewall Plugin is installed")    
+         print("Enterprise Firewall Plugin is installed")   
+         __listVariables('firewall', session)
     else:   
         print("Enterprise Firewall Plugin is not installed")
 
@@ -116,10 +117,10 @@ def run( session=None):
     print("Thread Pool")
     if __isThreadPoolOn(True, session):
         print("Thread Pool is installed")
-        __listThreadPoolVariables(session)
+        __listVariables('thread_pool', session)
     else:
         print("Thread Pool is notinstalled")
 
-    __listThreadPoolVariables
+    
     return
 
