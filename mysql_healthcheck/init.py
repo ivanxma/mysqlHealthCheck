@@ -1,5 +1,5 @@
 from mysqlsh.plugin_manager import plugin, plugin_function
-from mysql_healthcheck.comm import __runAndReturn, __isHeatWaveOnline, __isHeatWavePlugin, __listVariables
+from mysql_healthcheck.comm import __runAndReturn, __isHeatWaveOnline, __isHeatWavePlugin, __listVariables, __printSection
 from mysql_healthcheck.security import __isKeyringOn, __listEncryptedTables, __isAuditOn, __isFirewallOn
 from mysql_healthcheck.threadpool import __isThreadPoolOn
 from mysql_healthcheck import comm
@@ -72,26 +72,26 @@ def run( session=None):
                   "function or connect the shell to a database")
             return
 
-    print("sys.diagnostics Report")
+    __printSection("sys.diagnostics Report")
     print(__printResult(__runDiagnostics(session)))
     print("Database Size")
     print(__printResult(__getUserDatabaseTableSize(session)))
 
-    print("Support.fetchInfo()")
+    __printSection("Support.fetchInfo()")
     get_fetch_info(True, False, True, False, session)
 
-    print("check.getInnoDBTablesWithNoPK")
+    __printSection("check.getInnoDBTablesWithNoPK")
     get_innodb_with_nopk(session)
 
-    print("check.showbinlogsIO / showTrxSize")
+    __printSection("check.showbinlogsIO / showTrxSize")
     show_binlogs_io(session)
     
     show_trx_size(None, session)
 
-    print("Group Replication")
+    __printSection("Group Replication")
     status(session)
 
-    print("Audit Log")
+    __printSection("Audit Log")
     if __isAuditOn(True, session):
          print("Audit Plugin is installed") 
          __listVariables('audit',session)   
@@ -99,7 +99,7 @@ def run( session=None):
         print("Audit Plugin is not installed")
 
 
-    print("Enterprise Firewall")
+    __printSection("Enterprise Firewall")
     if __isFirewallOn(True, session):
          print("Enterprise Firewall Plugin is installed")   
          __listVariables('firewall', session)
@@ -107,14 +107,14 @@ def run( session=None):
         print("Enterprise Firewall Plugin is not installed")
 
 
-    print("Transparent Data Encryption")
+    __printSection("Transparent Data Encryption")
     if __isKeyringOn(True, session):
         print("TDE keyring is ON")
         __listEncryptedTables(session)
     else:
         print("TDE keyring is not installed")
 
-    print("Thread Pool")
+    __printSection("Thread Pool")
     if __isThreadPoolOn(True, session):
         print("Thread Pool is installed")
         __listVariables('thread_pool', session)

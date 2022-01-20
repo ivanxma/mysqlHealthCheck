@@ -70,6 +70,22 @@ def __isHeatWavePlugin(session=None):
 
     return False
 
+def __printSection(mytext=None):
+    if mytext is None:
+        return
+
+    print("")
+    print("")
+
+    print("*" * 80)
+    print("*" * 80)
+    
+    print("***" + "   " + mytext + " " * (80 - len(mytext) - 12) + "   ***")
+    
+    print("*" * 80)
+    print("*" * 80)
+    return
+
 def __listVariables(variablePattern=None, session=None):
 
     import mysqlsh
