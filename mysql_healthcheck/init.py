@@ -11,13 +11,10 @@ from group_replication.gr import status
 @plugin
 class mysql_healthcheck:
     """
-    health check Utils 
+    health check Utils ...
 
     A collection of utils to do health check on MySQL 
     """
-
-
-
 
 
 def __getUserDatabaseTableSize(session):
