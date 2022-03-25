@@ -26,7 +26,7 @@ def __getUserDatabaseTableSize(session):
     """
 
     result = __runAndReturn(session, stmt)
-    return result;
+    return result
 
 # internal function to Load call sys.diagnostics(....) 
 def __runDiagnostics(session):
